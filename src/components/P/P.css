@@ -1,7 +1,8 @@
 .p {
     font-weight: 400;
     color: var(--gray);
-    font-weight: 400
+    font-weight: 400;
+    margin: 0px;
 }
 
 .small {
