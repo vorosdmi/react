@@ -9,12 +9,26 @@
     box-sizing: border-box;
 }
 
-.navbar img {
-    /* margin-left: 120px;  */
-}
-
 .navbar-btn {
     display: flex;
     justify-content: right;
     width: 100%;
+}
+
+.circle-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--purple);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+}
+
+.number {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px; 
+    letter-spacing: 0.02em;
+    color: #fff; 
 }
