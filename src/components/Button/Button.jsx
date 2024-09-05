@@ -1,4 +1,4 @@
-import './Button.css';
+import styles from './Button.module.css';
 
 export default function Button( {title} ) {
 
@@ -7,6 +7,6 @@ export default function Button( {title} ) {
   };
 
   return (
-    <button className='button' onClick={onClick}>{title}</button> 
+    <button className={styles['button']} onClick={onClick}>{title}</button> 
   );
 }

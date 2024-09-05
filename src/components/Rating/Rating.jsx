@@ -1,8 +1,8 @@
-import './Rating.css';
+import styles from './Rating.module.css';
 
 export default function Rating({ num }) {
   return (
-    <div className="rating">
+    <div className={styles['rating']}>
         <img src="/star.svg" alt="rating" /> 
         <span>{num}</span>     
     </div>

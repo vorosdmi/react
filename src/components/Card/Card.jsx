@@ -1,18 +1,18 @@
 import Favorite from '../Favorite/Favorite';
-import H3 from '../H3/H3';
+import SubHeader from '../SubHeader/SubHeader';
 import Poster from '../Poster/Poster';
 import Rating from '../Rating/Rating';
-import './Card.css';
+import styles from './Card.module.css';
 
 export default function Card({ imgName, title, saved=false, rating }) {
   return (
-    <div className="card">
+    <div className={styles['card']}>
       <Rating num={rating} />
-      <div className='poster'>
+      <div className={styles['poster']}>
         <Poster imgName={imgName} />        
       </div>
-      <div className='footer'>
-        <H3 title={title}/>
+      <div className={styles['footer']}>
+        <SubHeader title={title}/>
         <Favorite saved={saved}/>
       </div>
     </div>

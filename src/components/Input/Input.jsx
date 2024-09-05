@@ -1,8 +1,8 @@
-import './Input.css';
+import styles from './Input.module.css';
 
 export default function Input({ svgPathLeft, placeholder, svgPathRight }) {
   return (
-    <div className="input-wrapper">
+    <div className={styles['input-wrapper']}>
         {
             svgPathLeft && 
             <img src={`/${svgPathLeft}`} alt="left img" />

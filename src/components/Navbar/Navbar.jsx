@@ -1,21 +1,21 @@
-import './Navbar.css';
-import A from '../A/A';
+import styles from './Navbar.module.css';
+import Link from '../Link/Link';
 
 export default function Navbar() {
   const circle_number = 
-    <div className='circle-container'>
-      <span className='number'>2</span>
+    <div className={styles['circle-container']}>
+      <span className={styles['number']}>2</span>
     </div>;
 
   return (
-    <div className="navbar">
-        <div className="navbar-logo">
+    <div className={styles['navbar']}>
+        <div className={styles['navbar-logo']}>
             <img src="/bookmark_large.svg" alt="favorites" />
         </div>
-        <div className="navbar-btn">
-            <A text='Поиск фильмов' focused/>  
-            <A text='Мои фильмы' img={circle_number} />
-            <A text='Войти' img={<img src="/login.svg" alt="favorites" />} />          
+        <div className={styles['navbar-btn']}>
+            <Link text='Поиск фильмов' focused/>  
+            <Link text='Мои фильмы' img={circle_number} />
+            <Link text='Войти' img={<img src="/login.svg" alt="favorites" />} />          
         </div>
     </div>
   );
