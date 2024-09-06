@@ -1,9 +1,9 @@
 import styles from './Link.module.css';
 import cn from 'classnames';
 
-export default function Link({ text, focused=false, img=undefined }) {
+export default function Link({ text, focused=false, img=undefined, onClick }) {
   const a_ = (
-    <a href="#" className={cn(styles['a'], {[styles['focused']]: focused})}>
+    <a href="#" onClick={onClick} className={cn(styles['a'], {[styles['focused']]: focused})}>
       {text}
     </a>
     );

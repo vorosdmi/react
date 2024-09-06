@@ -1,13 +1,20 @@
-import './App.css';
+import { useEffect, useRef, useState } from 'react';
+import styles from './App.module.css';
 import Button from './components/Button/Button';
 import Card from './components/Card/Card';
 import Header from './components/Header/Header';
 import Input from './components/Input/Input';
 import Navbar from './components/Navbar/Navbar';
-import P from './components/P/P';
-// import SearchIcon from '../src/';
+import Paragraph from './components/Paragraph/Paragraph';
+import AuthForm from './components/AuthForm/AuthForm';
 
 function App() {
+  const [loginedUser, setLoginedUser] = useState('');
+  const [usersState, setUsersState] = useState([]);
+
+  const refButton = useRef();
+  const refInput = useRef();
+
   const paragraphFirst = 'Введите название фильма, сериала или мультфильма для поиска и добавления в избранное.';
   const movies = [
     {
@@ -68,22 +75,74 @@ function App() {
     }
   ];
 
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem('users'));
+    if (users) {
+      setUsersState(users);
+
+      const user = users.find(user => user.isLogined);   
+      if (user) {
+        setLoginedUser(user.name);  
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('2');
+    console.log(usersState);
+    
+    if (usersState.length) {
+      localStorage.setItem('users', JSON.stringify(usersState));
+    }
+  }, [usersState]);
+
+  const checkUser = (user) => {
+    if (usersState.length) {
+      const userExist = usersState.some(existingUser => existingUser.name === user.userName);
+
+      if (userExist) {
+        setUsersState(users => 
+          users.map(userMap => userMap.name === user.userName ? {...userMap, isLogined: true} : userMap)
+        );
+      } else {
+        setUsersState(users => [...users, {
+          name: user.userName,
+          isLogined: true  
+        }]);
+      }
+    } else {
+      setUsersState([{
+        name: user.userName,
+        isLogined: true
+      }]);
+    }
+    setLoginedUser(user.userName);
+  };
+
+  const logout = (userName) => {
+    setLoginedUser('');
+    setUsersState(users => 
+      users.map(user => user.name === userName ? {...user, isLogined: false} : user)
+    );  
+  };
+
   return (
     <>
-      <Navbar />
-      <div className='div-body'>
+      <Navbar user={loginedUser} logoutProcess={logout}/>
+      <div className={styles['div-body']}>
         <Header title='Поиск'/>
-        <P text={paragraphFirst} size='small'></P>
-        <div className='input-btn'>
-          <Input 
+        <Paragraph text={paragraphFirst} size='small' />
+        <div className={styles['input-btn']}>
+          <Input
+            ref={refInput} 
             svgPathLeft='searchIcon.svg'
             placeholder='Введите название'
           />
-          <Button title="Искать" />
+          <Button title="Искать" ref={refButton}/>
         </div>
-        <div className='cards'>
+        <div className={styles['cards']}>
           {movies.map((el) => (
-            <Card key={el.key}
+            <Card key={el.id}
               imgName={el.img}
               title={el.title}
               saved={el.saved}
@@ -91,6 +150,8 @@ function App() {
             />
           ))}
         </div>
+        <AuthForm onSubmit={checkUser}/>
+        {/* <AuthForm/> */}
       </div>
     </>
   );
