@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import styles from './App.module.css';
 import Button from './components/Button/Button';
 import Card from './components/Card/Card';
@@ -7,10 +7,12 @@ import Input from './components/Input/Input';
 import Navbar from './components/Navbar/Navbar';
 import Paragraph from './components/Paragraph/Paragraph';
 import AuthForm from './components/AuthForm/AuthForm';
+import { LoginedUserContext } from './context/users.context';
+import useLocalStorage from './hooks/localStorage.hook';
 
-function App() {
-  const [loginedUser, setLoginedUser] = useState('');
-  const [usersState, setUsersState] = useState([]);
+export default function App() {
+  const {loginedUser, setLoginedUser} = useContext(LoginedUserContext);
+  const [users, setUsers] = useLocalStorage('data');
 
   const refButton = useRef();
   const refInput = useRef();
@@ -75,86 +77,66 @@ function App() {
     }
   ];
 
-  useEffect(() => {
-    const users = JSON.parse(localStorage.getItem('users'));
-    if (users) {
-      setUsersState(users);
-
-      const user = users.find(user => user.isLogined);   
-      if (user) {
-        setLoginedUser(user.name);  
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log('2');
-    console.log(usersState);
-    
-    if (usersState.length) {
-      localStorage.setItem('users', JSON.stringify(usersState));
-    }
-  }, [usersState]);
-
-  const checkUser = (user) => {
-    if (usersState.length) {
-      const userExist = usersState.some(existingUser => existingUser.name === user.userName);
-
-      if (userExist) {
-        setUsersState(users => 
-          users.map(userMap => userMap.name === user.userName ? {...userMap, isLogined: true} : userMap)
-        );
-      } else {
-        setUsersState(users => [...users, {
-          name: user.userName,
-          isLogined: true  
-        }]);
-      }
+  const checkUser = (userName) => {
+    if (loginedUser) {
+      alert('User has already logged in. Please, log out first!');
     } else {
-      setUsersState([{
-        name: user.userName,
+      if (users.length) {
+        const userExist = users.some(existingUser => existingUser.name === userName);
+        if (userExist) {
+          setUsers(users.map(userMap => userMap.name === userName ? {...userMap, isLogined: true} : userMap)
+          );  
+        } else {
+          setUsers([...users, {
+            name: userName,
+            isLogined: true  
+          }]);  
+        } 
+    } else {
+      setUsers([{
+        name: userName,
         isLogined: true
-      }]);
+      }]);  
     }
-    setLoginedUser(user.userName);
+    setLoginedUser(userName);
+     }
   };
 
-  const logout = (userName) => {
-    setLoginedUser('');
-    setUsersState(users => 
-      users.map(user => user.name === userName ? {...user, isLogined: false} : user)
-    );  
+  const logout = () => {
+    const updatedUsers = users.map(user => 
+      user.name === loginedUser ? {...user, isLogined: false} : user
+    );
+    setUsers(updatedUsers);
+    setLoginedUser('');  
   };
 
   return (
     <>
-      <Navbar user={loginedUser} logoutProcess={logout}/>
-      <div className={styles['div-body']}>
-        <Header title='Поиск'/>
-        <Paragraph text={paragraphFirst} size='small' />
-        <div className={styles['input-btn']}>
-          <Input
-            ref={refInput} 
-            svgPathLeft='searchIcon.svg'
-            placeholder='Введите название'
-          />
-          <Button title="Искать" ref={refButton}/>
-        </div>
-        <div className={styles['cards']}>
-          {movies.map((el) => (
-            <Card key={el.id}
-              imgName={el.img}
-              title={el.title}
-              saved={el.saved}
-              rating={el.rating}
+        <Navbar logoutProcess={logout}/>
+        {/* <Navbar /> */}
+        <div className={styles['div-body']}>
+          <Header title='Поиск'/>
+          <Paragraph text={paragraphFirst} size='small' />
+          <div className={styles['input-btn']}>
+            <Input
+              ref={refInput} 
+              svgPathLeft='searchIcon.svg'
+              placeholder='Введите название'
             />
-          ))}
+            <Button title="Искать" ref={refButton}/>
+          </div>
+          <div className={styles['cards']}>
+            {movies.map((el) => (
+              <Card key={el.id}
+                imgName={el.img}
+                title={el.title}
+                saved={el.saved}
+                rating={el.rating}
+              />
+            ))}
+          </div>
+          <AuthForm onSubmit={checkUser}/>
         </div>
-        <AuthForm onSubmit={checkUser}/>
-        {/* <AuthForm/> */}
-      </div>
     </>
   );
 }
-
-export default App;
