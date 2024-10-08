@@ -2,14 +2,26 @@ import { Header } from '../../components/Header/Header';
 import { Text } from '../../components/Text/Text';
 import {  Search } from '../../components/Search/Search';
 import styles from './Movies.module.css'
-import { useContext, useRef } from 'react';
+import { useRef } from 'react';
 import { Button } from '../../components/Button/Button';
 import { movies } from '../../data/cards';
 import { Card } from '../../components/Card/Card';
-import { LoginedUserContext } from '../../context/users.context';
+import { PREFIX } from '../../helpers/Api';
 
-export function Movies() {
+export function Movies(queryParams: string) {
 	const buttonRef = useRef<HTMLButtonElement>(null);
+
+	const getMovies = async() => {
+		try {
+			const res = await fetch(`${PREFIX}/?q=${queryParams}`);
+			if (!res.ok) {
+				return
+			}
+			const data = await res.json()
+		} catch (e) {
+			
+		}
+	}
 
 	return(
 		<>
