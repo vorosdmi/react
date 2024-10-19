@@ -8,6 +8,11 @@ import { Favorites } from './pages/Favorites/Favorites';
 import { Login } from './pages/Login/Login';
 import { LoginedUserContextProvider } from './context/users.context'
 import { Error } from './pages/Error/Error';
+import { Movie } from './components/Movie/Movie';
+import axios from 'axios';
+import { PREFIX } from './helpers/Api';
+import { PublicLayout } from './layout/AuthLayouts/PublicLayout';
+import { PrivateLayout } from './layout/AuthLayouts/PrivateLayout';
 
 const router = createBrowserRouter([
 	{
@@ -15,18 +20,29 @@ const router = createBrowserRouter([
 		element: <MainMenu />,
 		children: [
 			{
-				path: '/',
-				element: <Movies />
+				element: <PublicLayout />,
+				children: [
+					{path: '/login', element: <Login />},
+				]
 			},
 			{
-				path: '/favorites',
-				element: <Favorites />
+				element: <PrivateLayout />,
+				children: [
+					{path: '/',element: <Movies />},
+					{path: '/favorites',element: <Favorites />},
+					{
+						path: '/movie/:id',
+						element: <Movie />, 
+						errorElement: <>error</>,
+						loader: async ({params}) => {
+							const { data } = await axios.get(`${PREFIX}/?tt=${params.id}`);
+							console.log(data.short);
+							return data.short
+						}
+					},
+				]
 			},
 			{
-				path: '/login',
-				element: <Login />
-			},
-						{
 				path: '*',
 				element: <Error />
 			}

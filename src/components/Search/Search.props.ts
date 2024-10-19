@@ -1,4 +1,5 @@
 import { InputHTMLAttributes } from "react";
 
-
-export type SearchProps = InputHTMLAttributes<HTMLInputElement>
+export interface SearchProps extends InputHTMLAttributes<HTMLInputElement>{
+    isValid: boolean
+}

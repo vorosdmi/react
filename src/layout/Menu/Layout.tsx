@@ -1,14 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import styles from './Layout.module.css';
 import cn from 'classnames';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { LoginedUserContext } from '../../context/users.context';
-import { useLocalStorage } from '../../hooks/localStorage.hook';
 
 export function MainMenu() {
 
-	const [users, setUsers] = useLocalStorage('data')
-	const { loginedUser, setLoginedUser } = useContext(LoginedUserContext);
+	const { loginedUser, setLoginedUser, users, setUsers } = useContext(LoginedUserContext);
 	
 	let userMenu = <NavLink className={({ isActive }) => cn(styles.link,
 		{
@@ -26,28 +24,27 @@ export function MainMenu() {
 		)}
 	</NavLink>
 
+if (loginedUser) {
+	userMenu = <div className={styles.loginedUser}>
+			<NavLink onClick={logout} className={({ isActive }) => cn(styles.link,
+				{
+					[styles.active]: isActive
+				}
+			)} to='/login'>Выйти</NavLink> 
+			<div className={styles.link}>
+				<img src="/user-icon.svg" alt="icon user" />
+				{loginedUser}
+			</div>
+		</div>
+	}
+	
 	function logout() {
-		const updatedUsers = users.map(user => 
-			user.name === loginedUser ? {...user, isLogined: false} : user
-		);
-		setUsers(updatedUsers);
 		setLoginedUser('');
+		const updatedUsers = users.map(user => ({...user, isLogined: false}));
+		setUsers(updatedUsers);
+		localStorage.setItem('data', JSON.stringify(updatedUsers));
 	}
-
-	if (loginedUser) {
-		userMenu = <div className={styles.loginedUser}>
-						<NavLink onClick={logout} className={({ isActive }) => cn(styles.link,
-							{
-								[styles.active]: isActive
-							}
-						)} to='/login'>Выйти</NavLink> 
-						<div className={styles.link}>
-							<img src="/user-icon.svg" alt="icon user" />
-							{loginedUser}
-						</div>
-					</div>
-	}
-
+	
 	return(
 		<>
 			<div className={styles.navbar}>
