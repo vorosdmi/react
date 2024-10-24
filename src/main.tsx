@@ -36,7 +36,7 @@ const router = createBrowserRouter([
 						errorElement: <>error</>,
 						loader: async ({params}) => {
 							const { data } = await axios.get(`${PREFIX}/?tt=${params.id}`);
-							console.log(data.short);
+							// console.log(data.short);
 							return data.short
 						}
 					},

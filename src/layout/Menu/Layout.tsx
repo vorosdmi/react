@@ -42,7 +42,7 @@ if (loginedUser) {
 		setLoginedUser('');
 		const updatedUsers = users.map(user => ({...user, isLogined: false}));
 		setUsers(updatedUsers);
-		localStorage.setItem('data', JSON.stringify(updatedUsers));
+
 	}
 	
 	return(
