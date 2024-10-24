@@ -13,6 +13,8 @@ import axios from 'axios';
 import { PREFIX } from './helpers/Api';
 import { PublicLayout } from './layout/AuthLayouts/PublicLayout';
 import { PrivateLayout } from './layout/AuthLayouts/PrivateLayout';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const router = createBrowserRouter([
 	{
@@ -52,8 +54,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<LoginedUserContextProvider>
-			<RouterProvider router={router}/>
-		</LoginedUserContextProvider>
+		<Provider store={store}>
+			<LoginedUserContextProvider>
+				<RouterProvider router={router}/>
+			</LoginedUserContextProvider>
+		</Provider>
 	</StrictMode>
 );

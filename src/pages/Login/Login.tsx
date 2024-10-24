@@ -4,10 +4,12 @@ import { LoginedUserContext } from "../../context/users.context";
 // import { useLocalStorage } from "../../hooks/localStorage.hook";
 import styles from './Login.module.css';
 import { LocalStorageProps } from "../../hooks/localStorage.props";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
 	const {loginedUser, setLoginedUser, users, setUsers} = useContext(LoginedUserContext);
 	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		let errorTimer: ReturnType<typeof setTimeout>;
@@ -44,6 +46,7 @@ export function Login() {
 			}
 			setLoginedUser(userName);
 			setError(null);
+			navigate('/');
 		}
 		};
 
