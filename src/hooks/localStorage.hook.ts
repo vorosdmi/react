@@ -1,24 +1,22 @@
-import { useContext, useEffect, useState } from "react";
-import { LoginedUserContext } from "../context/users.context";
+import { useEffect, useState } from "react";
 import { LocalStorageProps } from "./localStorage.props";
 
-export function useLocalStorage(key: string): [LocalStorageProps[], (data: LocalStorageProps[]) => void] {
-    const { setLoginedUser } = useContext(LoginedUserContext);
+export function useLocalStorage(key: string): [LocalStorageProps[], (data: LocalStorageProps[]) => void, boolean] {
     const [data, setData] = useState<LocalStorageProps[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        console.log('useLocalStorage useEffect called');
         const res = localStorage.getItem(key);
         if (res) {
             const parsedData = JSON.parse(res) as LocalStorageProps[];
             if (parsedData) {
+                console.log('Parsed data:', parsedData);
                 setData(parsedData);
-                const loginedUser = parsedData.find(item => item.isLogined === true);
-                if (loginedUser) {
-                    setLoginedUser(loginedUser.name)
-                }
             }
         }
-    }, []);
+        setLoading(false);
+    }, [key]);
 
     const saveData = (newData: LocalStorageProps[]) => {
         if (newData.length) {
@@ -27,5 +25,5 @@ export function useLocalStorage(key: string): [LocalStorageProps[], (data: Local
         }
     }
 
-    return [data, saveData]
+    return [data, saveData, loading]
 }

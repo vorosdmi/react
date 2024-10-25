@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthForm } from "../../components/AuthForm/AuthForm";
 import { LoginedUserContext } from "../../context/users.context";
-import { useLocalStorage } from "../../hooks/localStorage.hook";
+// import { useLocalStorage } from "../../hooks/localStorage.hook";
 import styles from './Login.module.css';
+import { LocalStorageProps } from "../../hooks/localStorage.props";
 
 export function Login() {
-	const {loginedUser, setLoginedUser} = useContext(LoginedUserContext);
-	const [users, setUsers] = useLocalStorage('data');
+	const {loginedUser, setLoginedUser, users, setUsers} = useContext(LoginedUserContext);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -28,19 +28,19 @@ export function Login() {
 			if (users.length) {
 				const userExist = users.some(existingUser => existingUser.name === userName);
 				if (userExist) {
-					setUsers(users.map(userMap => userMap.name === userName ? {...userMap, isLogined: true} : userMap)
-					);  
+					const updatedUsers = users.map(user => user.name === userName ? { ...user, isLogined: true } : user);
+					setUsers(updatedUsers);
+					localStorage.setItem('data', JSON.stringify(updatedUsers)); 
 				} else {
-					setUsers([...users, {
-						name: userName,
-						isLogined: true  
-					}]);  
+					const newUser = {name: userName, isLogined: true};
+					const updatedUsers = [...users, newUser];
+					setUsers(updatedUsers);
+					localStorage.setItem('data', JSON.stringify(updatedUsers));  
 				} 
 			} else {
-				setUsers([{
-					name: userName,
-					isLogined: true
-				}]);  
+				const newUser = [{name: userName, isLogined: true}]
+				setUsers(newUser);  
+				localStorage.setItem('data', JSON.stringify(newUser));
 			}
 			setLoginedUser(userName);
 			setError(null);

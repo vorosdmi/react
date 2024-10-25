@@ -1,0 +1,8 @@
+.info {
+    font-weight: 600;
+    font-size: 32px;
+
+    line-height: 125%;
+    letter-spacing: -0.02em;
+    color: var(--text-color);
+}

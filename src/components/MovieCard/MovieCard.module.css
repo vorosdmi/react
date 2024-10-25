@@ -28,7 +28,7 @@
 
     border-radius: 8px;
     padding: 4px 8px;
-    width: 65px;
+    max-width: 95px;
     height: 32px;
 
     backdrop-filter: blur(8px);
@@ -39,7 +39,6 @@
 
     line-height: 150%;
     color: var(--primary-third-color);
-
 }
 
 .footer {
@@ -54,7 +53,11 @@
 .title {
     line-height: 150%;
     letter-spacing: 0.02em; 
-    color: var(--text-color);    
+    color: var(--text-color); 
+    /* max-height: 5em;  */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;  
 }
 
 .favorite {
@@ -66,4 +69,14 @@
 
 .saved {
     color: var(--primary-color);
+}
+
+.link {
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.25s;    
+}
+
+.link :hover {
+    transform: scale(1.02);       
 }

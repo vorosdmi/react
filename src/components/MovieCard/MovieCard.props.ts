@@ -1,5 +1,5 @@
-export interface CardProps {
-    id: number,
+export interface MovieCardProps {
+    id: string,
     rating: number,
     image: string,
     title: string,
