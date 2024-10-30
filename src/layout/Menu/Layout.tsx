@@ -1,12 +1,16 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import styles from './Layout.module.css';
 import cn from 'classnames';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { LoginedUserContext } from '../../context/users.context';
+import { useSelector } from 'react-redux';
+import { selectFavoriteCount } from '../../store/favorite.slice';
+import { RootState } from '../../store/store';
 
 export function MainMenu() {
 
 	const { loginedUser, setLoginedUser, users, setUsers } = useContext(LoginedUserContext);
+	const favoriteCount = useSelector((s: RootState) => selectFavoriteCount(s, loginedUser));
 	
 	let userMenu = <NavLink className={({ isActive }) => cn(styles.link,
 		{
@@ -24,7 +28,7 @@ export function MainMenu() {
 		)}
 	</NavLink>
 
-if (loginedUser) {
+	if (loginedUser) {
 	userMenu = <div className={styles.loginedUser}>
 			<NavLink onClick={logout} className={({ isActive }) => cn(styles.link,
 				{
@@ -42,7 +46,7 @@ if (loginedUser) {
 		setLoginedUser('');
 		const updatedUsers = users.map(user => ({...user, isLogined: false}));
 		setUsers(updatedUsers);
-
+		localStorage.setItem('data', JSON.stringify(updatedUsers));
 	}
 	
 	return(
@@ -61,7 +65,10 @@ if (loginedUser) {
 						{
 							[styles.active]: isActive
 						}
-					)} to='/favorites'>Мои фильмы</NavLink> 
+					)} to='/favorites'>
+						{favoriteCount > 0 && <span>{favoriteCount}</span>}
+						Мои фильмы
+					</NavLink> 
 					{userMenu}
 				</div>
 			</div>

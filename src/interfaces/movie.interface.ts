@@ -3,5 +3,6 @@ export interface movieProps {
   "#IMDB_ID": string
   "#RANK": number
   "#IMG_POSTER": string
-  "saved": boolean
+  "saved": boolean,
+  "user": string
 }

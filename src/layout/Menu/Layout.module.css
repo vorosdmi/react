@@ -27,6 +27,17 @@
     gap: 8px;
 }
 
+.link span {
+    background-color: var(--primary-second-color);
+    width: 24px;
+    height: 24px;
+
+    border-radius: 50%;
+    text-align: center;
+
+    color: var(--text-color);
+}
+
 .active {
     color: var(--menu-active-color);       
 }
